@@ -21,7 +21,7 @@ public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationC
     protected Class<?>[] getServletConfigClasses() {
         return new Class[]{SpringConfig.class};
     }
-    
+
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
