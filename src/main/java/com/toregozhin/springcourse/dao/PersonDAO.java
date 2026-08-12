@@ -1,30 +1,65 @@
 package com.toregozhin.springcourse.dao;
 
 import com.toregozhin.springcourse.models.Person;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Component
 public class PersonDAO {
 
-    public List<Person> index() {
-        return null;
+    private SessionFactory sessionFactory;
+
+    @Autowired
+    public PersonDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
-    public void show(int id) {
 
+    @Transactional(readOnly = true)
+    public List<Person> index() {
+        Session session = sessionFactory.getCurrentSession();
+
+        List<Person> people;
+        people = session.createQuery("FROM Person", Person.class).getResultList();
+
+        return people;
+    }
+
+    public Person show(int id) {
+        Session session = sessionFactory.getCurrentSession();
+
+        Person person = session.get(Person.class, id);
+
+        return person;
     }
 
     public void save(Person person) {
+        Session session = sessionFactory.getCurrentSession();
 
+        session.persist(person);
     }
 
-    public void update(int id, Person person) {
+    public void update(int id, Person updatePerson) {
+        Session session = sessionFactory.getCurrentSession();
+
+        Person person = session.get(Person.class, id);
+
+        person.setName(updatePerson.getName());
+        person.setAge(updatePerson.getAge());
 
     }
 
     public void delete(int id) {
+        Session session = sessionFactory.getCurrentSession();
+
+        Person person = session.get(Person.class, id);
+
+        session.remove(person);
 
     }
 }
